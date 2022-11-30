@@ -1,6 +1,6 @@
 # Transverse-instabilities
 
-These codes require [GNU Scientific Library](https://www.gnu.org/software/gsl/doc/html/index.html) (tested in version 2.7).
+These codes require the [GNU Scientific Library](https://www.gnu.org/software/gsl/doc/html/index.html) (tested in version 2.7).
 
 The `src` folder contains the source code:
 
