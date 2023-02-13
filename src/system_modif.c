@@ -25,6 +25,8 @@ int system_initialize(int argc, char **argv, System *sys , Graph *g)
 	sys->p=atof(argv[3]);
         sys->eps=atof(argv[4]);
 	sys->N=N;
+	int n=8;
+	sys->n=n;
 
 	fprintf(stderr,"\033[1;96mCoupled Jansen-Rit NMM\n");
         fprintf(stderr,"p = %lf\n",sys->p);
@@ -49,10 +51,10 @@ int system_initialize(int argc, char **argv, System *sys , Graph *g)
         //omp_set_dynamic(0);
         //omp_set_num_threads(4);
 
-        sys->x=(double *)malloc(sizeof(double)*N*6);
-        sys->x0=(double *)malloc(sizeof(double)*N*6);
-        sys->xf=(double *)malloc(sizeof(double)*N*6);
-        sys->k=(double *)malloc(sizeof(double)*N*6);
+        sys->x=(double *)malloc(sizeof(double)*N*n);
+        sys->x0=(double *)malloc(sizeof(double)*N*n);
+        sys->xf=(double *)malloc(sizeof(double)*N*n);
+        sys->k=(double *)malloc(sizeof(double)*N*n);
 
 	if(read_ic(sys->x,sys->N, "initial_conditions.dat")==-1)
         	initial_conditions(sys->x,sys->N,sys->p);
@@ -121,7 +123,6 @@ void initial_conditions(double *x, int N, double p)
         y[6]=0.0
         y[7]=0.01;
 
-	double pert=0;
 	double r;
 	for(int i=0; i<N;i++)
 	{
@@ -129,20 +130,19 @@ void initial_conditions(double *x, int N, double p)
 		pert=r*r;
 		MATRIX(x,i,0)=a*y[0]+b*r;
 		r=RANDIFF;
-		pert+=r*r;
 		MATRIX(x,i,1)=a*y[1]+b*r;
 		r=RANDIFF;
-		pert+=r*r;
 		MATRIX(x,i,2)=a*y[2]+b*r;
 		r=RANDIFF;
-		pert+=r*r;
 		MATRIX(x,i,3)=a*y[3]+b*r;
 		r=RANDIFF;
-		pert+=r*r;
 		MATRIX(x,i,4)=a*y[4]+b*r;
 		r=RANDIFF;
-		pert+=r*r;
 		MATRIX(x,i,5)=a*y[5]+b*r;
+		r=RANDIFF;
+		MATRIX(x,i,6)=a*y[5]+b*r;
+		r=RANDIFF;
+		MATRIX(x,i,7)=a*y[5]+b*r;
 	}
 
         return ;
@@ -216,13 +216,18 @@ void velocity_fields(System *sys, Graph *g)
 		double y3=MATRIX(sys->x,i,3);
 		double y4=MATRIX(sys->x,i,4);
 		double y5=MATRIX(sys->x,i,5);
+		double x1=MATRIX(sys->x,i,6);
+		double x2=MATRIX(sys->x,i,7);
 
 		MATRIX(sys->k,i,0)=y3;
 		MATRIX(sys->k,i,1)=y4;
 		MATRIX(sys->k,i,2)=y5;
-		MATRIX(sys->k,i,3)=PAR_a*( PAR_A*g->sigmoid[i]-2*y3-PAR_a*y0);
-		MATRIX(sys->k,i,4)=PAR_A*PAR_a*( sys->p + PAR_C2*Sigm(PAR_C1*y0) + sys->eps*g->input[i] ) - PAR_a*(2*y4+PAR_a*y1);
-		MATRIX(sys->k,i,5)=PAR_b*( PAR_B*PAR_C4*Sigm(PAR_C3*y0)-2*y5-PAR_b*y2);
+		MATRIX(sys->k,i,3)=PAR_a*( PAR_A*Sigm(y1-y2 +x1)-2*y3-PAR_a*y0);
+		MATRIX(sys->k,i,4)=PAR_a* (PAR_A*( p + PAR_C2*Sigm(PAR_C1*y0) ) - 2*y4 - PAR_a*y1);
+		MATRIX(sys->k,i,5)=PAR_b*( PAR_B*PAR_C4*Sigm(PAR_C3*y0+x1)-2*y5-PAR_b*y2);
+		MATRIX(sys->k,i,6)=x2;
+		MATRIX(sys->k,i,7)=PAR_a*(PAR_A*sys->eps*g->input[i] - 2*x2-PAR_a*x1);
+
 
 	}
 
