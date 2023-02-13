@@ -1,7 +1,9 @@
 # Ignore long data and auxiliary files:
 
-*dat
+*.dat
+*.o
 fort.*
 d.*
 s.*
 b.*
+
