@@ -1,0 +1,7 @@
+# Ignore long data and auxiliary files:
+
+*dat
+fort.*
+d.*
+s.*
+b.*

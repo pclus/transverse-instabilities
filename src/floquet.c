@@ -1,24 +1,25 @@
-/* ---- COMPUTATION OF LARGEST LYAPUNOV EXPONENT IN THE JANSEN-RIT MODEL ----
+/* ---- COMPUTATION OF LARGEST FLOQUET EXPONENT IN THE JANSEN-RIT MODEL ----
  * Code written by P. Clusella (pau.clusella@upf.edu)
  * 11/03/2021
  * Free to use, modify, and distribute. Non-comercial.
+ *
  * The Jansen-Rit model is a Neural Mass Model composed of 6 ODE.
  * In order to study the stability of limit-cycle solutions in a coupled
  * network of JR-NMM one needs to study the Master Stability Function
  * which relates the Floquet exponents (or Lyapunov exponents) of the
- * syncrhonized with that of the connectivity matrix.
+ * synchronized state with the diagonalization of the connectivity matrix.
  * 
- * Given parameter values of the system and and eigenvalue of the connectivity
- * matrix this code returns the largest Lyapunov exponent. Applying
+ * Given parameter values of the system and an eigenvalue of the connectivity
+ * matrix, this code returns the largest Floquet exponent. Applying
  * this routine to all eigenvalues of the connectivity matrix provides
  * the dispersion relation of the system.
  *
  * The period and an initial condition on the limit cycle must be provided.
  *
- * The code uses Gnu Scientific Library (GSL) and BLAS for readability.
- * Code not otpimized by readability, not efficiency.
+ * The code uses Gnu Scientific Library (GSL) and BLAS.
  *
- * Compilation example:
+ * Compilation example with gcc:
+ *
  * gcc floquet.c -o ../floquet -lm -lgsl -lgslcblas -lblas -O3
  */
 
