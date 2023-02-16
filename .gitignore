@@ -1,5 +1,6 @@
 # Ignore long data and auxiliary files:
 
+*.bin
 *.tex
 *.pdf
 *.dat
