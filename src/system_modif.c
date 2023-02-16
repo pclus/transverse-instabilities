@@ -1,6 +1,6 @@
 #ifndef SYSTEMSL_H
 #define SYSTEMSL_H
-        #include "system.h"
+        #include "system_modif.h"
 #endif
 
 double newpar_alpha;
@@ -111,19 +111,19 @@ void system_rk4(System *sys , Graph *g)
 void initial_conditions(double *x, int N, double p)
 {
 	double a=1.0,b=0.001;
-	double y[sys->n];
-	for(int i=0;i<sys->n;i++) y[i]=0;
+	double y[SYS_N];
+	for(int i=0;i<SYS_N;i++) y[i]=0;
 	
-	y[0]=0.01;
-	y[1]=6.82;
-	y[2]=2.156;
-        y[3]=1.3
-       	y[4]=0.589;
-        y[5]=0.5
-        y[6]=0.0
-        y[7]=0.01;
+	y[0]=0.31;
+	y[1]=0.038;
+	y[2]=9.78;
+        y[3]=6.70;
+       	y[4]=0.26;
+        y[5]=62.9;
+        y[6]=49.55;
+        y[7]=1.14;
 
-	double r;
+	double r,pert;
 	for(int i=0; i<N;i++)
 	{
 		r=RANDIFF;
@@ -192,7 +192,8 @@ void velocity_fields(System *sys, Graph *g)
 	{
 		double y1=MATRIX(sys->x,i,1);
 		double y2=MATRIX(sys->x,i,2);
-		g->sigmoid[i]=Sigm(y1-y2);
+		double x1=MATRIX(sys->x,i,6);
+		g->sigmoid[i]=Sigm(y1-y2+x1);
 	}
 
 	//#pragma omp parallel for default(shared)
@@ -223,7 +224,7 @@ void velocity_fields(System *sys, Graph *g)
 		MATRIX(sys->k,i,1)=y4;
 		MATRIX(sys->k,i,2)=y5;
 		MATRIX(sys->k,i,3)=PAR_a*( PAR_A*Sigm(y1-y2 +x1)-2*y3-PAR_a*y0);
-		MATRIX(sys->k,i,4)=PAR_a* (PAR_A*( p + PAR_C2*Sigm(PAR_C1*y0) ) - 2*y4 - PAR_a*y1);
+		MATRIX(sys->k,i,4)=PAR_a* (PAR_A*( sys->p + PAR_C2*Sigm(PAR_C1*y0) ) - 2*y4 - PAR_a*y1);
 		MATRIX(sys->k,i,5)=PAR_b*( PAR_B*PAR_C4*Sigm(PAR_C3*y0+x1)-2*y5-PAR_b*y2);
 		MATRIX(sys->k,i,6)=x2;
 		MATRIX(sys->k,i,7)=PAR_a*(PAR_A*sys->eps*g->input[i] - 2*x2-PAR_a*x1);
@@ -294,7 +295,7 @@ int initialize_network(char *namenet, Graph *g)
         {
                 g->neighbour[j]=b;
                 //g->weights[j]=c;				// raw setup
-                //g->weights[j]=c/mean_strength;             	// realistic setup
+                //g->weights[j]=c/mean_strength;             	// raw-normalized setup
                 //g->weights[j]=c/(1.0*g->degree[a]);        	// binary homogneous
                 g->weights[j]=c/(1.0*g->weightsum[a]);     	// weighted homogeneous    
                 j++;

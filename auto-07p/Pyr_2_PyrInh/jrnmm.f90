@@ -59,7 +59,7 @@
        F(6)= b1*b0*c4*sigm(c3*y0+x1) -2*b0*y5 - b0**2*y2
 
        F(7)= x2 ! \dot x1
-       F(8)= a1*a0*eps*sigm(y1-y2) - 2*a0*x2 - a0**2*x1 ! \dot x2
+       F(8)= a1*a0*eps*sigm(y1-y2+x1) - 2*a0*x2 - a0**2*x1 ! \dot x2
 
 
       IF(IJAC.EQ.0)RETURN

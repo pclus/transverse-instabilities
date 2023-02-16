@@ -1,5 +1,7 @@
 # Ignore long data and auxiliary files:
 
+*.tex
+*.pdf
 *.dat
 *.o
 fort.*

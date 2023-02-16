@@ -195,7 +195,7 @@ void velocity_fields(gsl_vector *x, gsl_vector *k, double p, double eps, double 
        	VECTOR(k,4)=PAR_a* (PAR_A*( p + PAR_C2*Sigm(PAR_C1*y0) ) - 2*y4 - PAR_a*y1);
        	VECTOR(k,5)=PAR_b*( PAR_B*PAR_C4*Sigm(PAR_C3*y0+x1)-2*y5-PAR_b*y2);
 	VECTOR(k,6)=x2;
-	VECTOR(k,7)=PAR_a*(PAR_A*eps*Sigm(y1-y2) - 2*x2-PAR_a*x1);
+	VECTOR(k,7)=PAR_a*(PAR_A*eps*Sigm(y1-y2+x1) - 2*x2-PAR_a*x1);
 
        	gsl_vector_view xt = gsl_vector_subvector(x, n, n);
        	gsl_vector_view kt = gsl_vector_subvector(k, n, n);
@@ -266,10 +266,11 @@ void jacobian(gsl_matrix *j, gsl_vector *x, double eps, double lambda )
         MATRIX_SET(j,5,6, PAR_b*PAR_B*PAR_C4*dSigm(PAR_C3*y0+x1) );
 
 	MATRIX_SET(j,6,7,1.0);
-	MATRIX_SET(j,7,6, -PAR_a*PAR_a);
+	//MATRIX_SET(j,7,6, -PAR_a*PAR_a);
 	MATRIX_SET(j,7,7, -2*PAR_a);
-	MATRIX_SET(j,7,1,  PAR_A*PAR_a*eps*lambda*dSigm(y1-y2));
-	MATRIX_SET(j,7,2, -PAR_A*PAR_a*eps*lambda*dSigm(y1-y2));
+	MATRIX_SET(j,7,1,  PAR_A*PAR_a*eps*lambda*dSigm(y1-y2+x1));
+	MATRIX_SET(j,7,2, -PAR_A*PAR_a*eps*lambda*dSigm(y1-y2+x1));
+	MATRIX_SET(j,7,6, -PAR_a*PAR_a + PAR_A*PAR_a*eps*lambda*dSigm(y1-y2+x1));
 
         return ;
 }
