@@ -133,11 +133,11 @@
       DOUBLE PRECISION FUNCTION GETUY_MAX(U,NDX,NTST,NCOL)
       INTEGER, INTENT(IN) :: NDX,NCOL,NTST
       DOUBLE PRECISION, INTENT(IN) :: U(NDX,0:NCOL*NTST)
-      DOUBLE PRECISION  :: PCLU_Y(0:NTST*NCOL)
+      DOUBLE PRECISION  :: AUX_Y(0:NTST*NCOL)
 
-      PCLU_Y=U(2,:)-U(3,:)
+      AUX_Y=U(2,:)-U(3,:)
 
-      GETUY_MAX=MAXVAL(PCLU_Y)
+      GETUY_MAX=MAXVAL(AUX_Y)
 
       END FUNCTION GETUY_MAX
 !-----------------------------------------------------------
@@ -145,11 +145,11 @@
       DOUBLE PRECISION FUNCTION GETUY_MIN(U,NDX,NTST,NCOL)
       INTEGER, INTENT(IN) :: NDX,NCOL,NTST
       DOUBLE PRECISION, INTENT(IN) :: U(NDX,0:NCOL*NTST)
-      DOUBLE PRECISION  :: PCLU_Y(0:NTST*NCOL)
+      DOUBLE PRECISION  :: AUX_Y(0:NTST*NCOL)
 
-      PCLU_Y=U(2,:)-U(3,:)
+      AUX_Y=U(2,:)-U(3,:)
 
-      GETUY_MIN=MINVAL(PCLU_Y)
+      GETUY_MIN=MINVAL(AUX_Y)
 
       END FUNCTION GETUY_MIN
 !-----------------------------------------------------------

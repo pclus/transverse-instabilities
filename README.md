@@ -1,14 +1,20 @@
 # Transverse-instabilities
 
+This software provides the main tools to reproduce the results of the paper: 
+[Clusella et al. , *Complex spatiotemporal oscillations emerge from transverse instabilities in large-scale brain networks* (2022)](https://doi.org/10.1101/2022.12.02.518809).
+Cite this work if you use this, or parts of this, repository.
+
+
+## Summary and dependencies
+
+Mainly, this repository provides 3 tools that could be used independently:
+
+- Integration of a network of coupled Jansen-Rit NMMs and computation of their largest Lyapunov exponents. This is provided by the `src/netdynamics.c` and `src/system.c` C codes.
+- Scripts to compute 1-parameter bifurcation diagrams as those in Fig. 1(a-d) of the paper in `auto-07p`.
+- Computation of the MSF of the coupled Jansen model, provided by the `src/floquet.c` code.
+
 The C codes in this repository require the [GNU Scientific Library](https://www.gnu.org/software/gsl/doc/html/index.html) (tested using version 2.7).
-
-## Summary 
-
-The `src` folder contains the source code:
-
-- `netdynamics`: contains the main functions for monitoring the integration of the large-scale brain model. Can work with either `system` or `system_lyap_exp`.
-- `system`: contains the main functions for integration of the large-scale brain model, including the Runge-Kutta algorithm, the velocity fields, and the algorithms to compute Lyapunov Exponents
-- `floquet`: independent code to compute the Floquet exponents using the Master Stability Function formalism. 
+Auto-07p can be obtained from the [project github](https://github.com/auto-07p/auto-07p/releases).
 
 ## Integration of the Jansen-Rit network
 
@@ -69,3 +75,37 @@ the Python interface. The also contain the instruction to obtain initial conditi
 to be used for computation of the Floquet exponents `floquet.c` (see **Master Stability Function** below).
 
 ## Master Stability Function
+
+The standalone C code  `floquet.c` in `src` computes the largest Floquet exponent
+of the self-coupled Jansen model.
+The code can be compiled with:
+
+```
+gcc src/floquet.c -o floquet -lm -lgsl -lgslcblas -lblas -O3
+```
+
+The simulations are called with:
+```
+./floquet <p> <eps> <lambda> <ic file>
+```
+
+where 
+
+- `p` is the $p$ parameter of the Jansen model.
+- `eps` is the coupling strength.
+- `lambda` is the structural connectivity eigenvalue that you want to use. To obtain the entire dispersion relation of the system one needs to loop over all the eigenvalues.
+- `ic file` is the path to the initial conditions of limit cycle, as provided by the auto scripts.
+
+Upon success the algorithm provides, in standard output 4 numbers: `<p> <eps> <lambda> <largest Floquet exponent>`.
+For instance, a call to
+
+```
+./floquet 120 50 0.7 auto-07p/msf_initial_conditions.dat 
+```
+gives
+
+```
+230.000000 50.000000 0.700000 0.6125043913964573
+
+```
+

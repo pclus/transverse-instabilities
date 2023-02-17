@@ -1,11 +1,13 @@
-/* ---- COMPUTATION OF LARGEST FLOQUET EXPONENT IN THE JANSEN-RIT MODEL ----
+/* ---- COMPUTATION OF LARGEST FLOQUET EXPONENT IN THE JANSEN MODEL ----
  * Code written by P. Clusella (pau.clusella@upf.edu)
- * 11/03/2021
+ * 17/02/2023
  * Free to use, modify, and distribute. Non-comercial.
+ * Cite the paper if you use this or parts of this code 
+ * (see README for an updated reference)
  *
- * The Jansen-Rit model is a Neural Mass Model composed of 6 ODE.
+ * The Jansen model is a Neural Mass Model composed of 6 ODE.
  * In order to study the stability of limit-cycle solutions in a coupled
- * network of JR-NMM one needs to study the Master Stability Function
+ * network of such NMMs one needs to study the Master Stability Function,
  * which relates the Floquet exponents (or Lyapunov exponents) of the
  * synchronized state with the diagonalization of the connectivity matrix.
  * 
@@ -15,6 +17,7 @@
  * the dispersion relation of the system.
  *
  * The period and an initial condition on the limit cycle must be provided.
+ * These can be obtained, for instance, using the provided auto-07p scripts.
  *
  * The code uses Gnu Scientific Library (GSL) and BLAS.
  *
@@ -62,17 +65,16 @@ double normalize(gsl_vector *v );
 
 int main(int argc, char **argv)
 {
+
+	if(argc!=5)
+	{
+		fprintf(stderr,"Run this code with: ./floquet <p> <eps> <lambda> <ic_file>\n");
+		return 0;
+	}
 	double p=atof(argv[1]); 
 	double eps=atof(argv[2]); 
 	double lambda=atof(argv[3]);
 	double period; 
-
-	//FILE *fic=fopen(argv[1],"r");
-        //if(fic==NULL)
-        //{
-        //        fprintf(stderr,"File %s not found!\n",argv[1]);
-        //        return -1;
-        //}
 
 	int n=6;
 	int m=2*n;
@@ -81,11 +83,8 @@ int main(int argc, char **argv)
 	gsl_vector *xf=gsl_vector_alloc(m);
 	gsl_vector *k=gsl_vector_alloc(m);
 
-        //int err=fscanf(fic,"%lf %lf %lf %lf %lf %lf %lf %lf %lf\n",&p,&eps,&period,&VECTOR(x,0), &VECTOR(x,1), &VECTOR(x,2), &VECTOR(x,3), &VECTOR(x,4), &VECTOR(x,5) );
-        //fclose(fic);
-
 	double p0,eps0;
-	FILE *fin=fopen("7_results/StabilityAnalysis/FlIcs/xtenflic_all.dat","r");
+	FILE *fin=fopen(argv[4],"r");
         while(fscanf(fin,"%lf %lf %lf %lf %lf %lf %lf %lf %lf\n",
                                 &p0,&eps0,&period,
                                 &VECTOR(x,0),
@@ -98,7 +97,7 @@ int main(int argc, char **argv)
         fclose(fin);
 	if(eps0!=eps || p0!=p)
 	{
-		fprintf(stderr,"WARNING! Initial values not found: %lf %lf vs  %lf %lf\n",p,eps,p0,eps0);
+		fprintf(stderr,"WARNING! Initial values not found in file  %s\n",argv[4]);
 	}
 
 
@@ -124,14 +123,12 @@ int main(int argc, char **argv)
 		system_rk4(x,xf,x0,k, dt,p,eps,lambda);
 		t+=dt;
 		count++;
-		//fprintf(stdout,"%lf %lf\n",t,VECTOR(x,1)-VECTOR(x,2));
 		if(count%nn==0)
 		{
 			if( i > transient )
 			{
 				double l0=log(normalize((gsl_vector *) &xt));
 				l+=l0;
-				//fprintf(stdout,"%.16g %.16g %.16g\n",l0,l,VECTOR(x,1)-VECTOR(x,2));
 			}else
 			{
 				normalize((gsl_vector *) &xt);
