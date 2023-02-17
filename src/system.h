@@ -4,22 +4,20 @@
         #include <stdlib.h>
         #include <math.h>
         #include <time.h>
-        #include <unistd.h> // needed for pipes
-        #include <fcntl.h> // needed only for the nonblocking read
-        #include <sys/types.h>
-        #include <sys/wait.h>
-        #include <signal.h>
 #endif
 
-#ifndef OPENMP_H
-#define OPENMP_H
-	#include <omp.h>
+#ifndef BOOL_H
+#define BOOL_H
+        typedef enum { false, true } bool;
 #endif
 
 #ifndef GSL_H
 #define GSL_H
         #include <gsl/gsl_rng.h>
         #include <gsl/gsl_rstat.h>
+        #include <gsl/gsl_matrix.h>
+        #include <gsl/gsl_vector.h>
+        #include <gsl/gsl_linalg.h>
 #endif
 
 #define RAND (gsl_rng_uniform(rrr))//((double)rand())/RAND_MAX 
@@ -44,12 +42,16 @@ gsl_rng * rrr;
 #define PAR_C3 (0.25*PAR_C1)
 #define PAR_C4 (0.25*PAR_C1)
 
-#define MATRIX(A,i,j) A[(i)*6+j]
+#define MATRIX(A,i,j) A[(i)*SYS_M+j]
+#define TMAT(A,node,iLE,var) A[ (N*SYS_M) + (node*SYS_M + var)*nLE + (iLE) ] 
+
+#define SYS_M (6)
 
 typedef struct graph{
         double *input;
         double *weights;
         double *sigmoid;
+        double *dsigmoid;
         double *weightsum;
         int *neighbour;
         int *cumulative;
@@ -58,6 +60,8 @@ typedef struct graph{
 
 typedef struct sys{
 	int N;
+	int m;
+	int nLE;
 	double *x;
 	double *x0;
 	double *xf;
@@ -68,11 +72,30 @@ typedef struct sys{
 	double eps;
 }System;
 
+typedef struct lyapunov_exponents
+{
+        size_t rows;
+        size_t cols;
+        gsl_matrix_view m;
+        gsl_matrix *M;
+        gsl_matrix *T;
+        gsl_matrix *Q;
+        gsl_matrix *R;
+        double *expo;
+        int count;
+}Lyapunov;
+
+
 int system_initialize(int argc, char **argv, System *sym, Graph *g );
 void system_rk4(System *sys , Graph *g);
-void initial_conditions(double *x, int N, double p);
+void initial_conditions(System *sys);
 void velocity_fields(System *sym, Graph *g);
 double Sigm(double y);
-int initialize_network(char *namenet, Graph *g);
+double dSigm(double y);
+int initialize_network(char *namenet, Graph *g, int nLE);
 void clear_workspace(System *sys, Graph *g);
-int read_ic(double *x, int N, char *name);
+
+void lyap_inititalize(Lyapunov *lyap, size_t rows, size_t cols, double *x);
+void lyap_finish(Lyapunov *lyap);
+void lyap_exp(Lyapunov *lyap, bool flag);
+
