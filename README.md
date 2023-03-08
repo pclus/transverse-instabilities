@@ -116,7 +116,7 @@ This structural connectivity corresponds to the average connectome
 of 16 healthy subjects obtained from Diffusion Tensor Imaging and parcelled with the AAL90 atlas.  
 For details about data collection and postprocessing users should refer to the
 original publication by [Deco et al. (2017)](https://doi.org/10.1016/j.neuroimage.2017.03.023).
-Any works using this data must cite that paper as well as [Clusella et. al (2022)](https://doi.org/10.1016/j.neuroimage.2017.03.023).
+Any works using this data must cite that paper as well as [Clusella et. al (2022)](https://doi.org/10.1101/2022.12.02.518809).
 
 
 
