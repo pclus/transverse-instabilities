@@ -108,4 +108,15 @@ gives
 230.000000 50.000000 0.700000 0.6125043913964573
 
 ```
+## Structural Connectivity Data
+
+The connectome used in the article is provided in `data/sc2017.dat`. 
+The data is given in the format specified in the **Network data format** section above.
+This structural connectivity corresponds to the average connectome
+of 16 healthy subjects obtained from Diffusion Tensor Imaging and parcelled with the AAL90 atlas.  
+For details about data collection and postprocessing users should refer to the
+original publication by [Deco et al. (2017)](https://doi.org/10.1016/j.neuroimage.2017.03.023).
+Any works using this data must cite that paper as well as [Clusella et. al (2022)](https://doi.org/10.1016/j.neuroimage.2017.03.023).
+
+
 

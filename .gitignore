@@ -12,3 +12,4 @@ d.*
 s.*
 b.*
 *swp
+!data/sc2017.dat
