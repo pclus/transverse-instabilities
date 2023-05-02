@@ -1,7 +1,7 @@
 # Transverse-instabilities
 
 This software provides the main tools to reproduce the results of the paper: 
-[Clusella et al. , *Complex spatiotemporal oscillations emerge from transverse instabilities in large-scale brain networks* (2022)](https://doi.org/10.1101/2022.12.02.518809).
+[Clusella et al. , *Complex spatiotemporal oscillations emerge from transverse instabilities in large-scale brain networks* (2023)](https://doi.org/10.1371/journal.pcbi.1010781).
 Cite this work if you use this, or parts of this, repository.
 
 
@@ -116,7 +116,7 @@ This structural connectivity corresponds to the average connectome
 of 16 healthy subjects obtained from Diffusion Tensor Imaging and parcelled with the AAL90 atlas.  
 For details about data collection and postprocessing users should refer to the
 original publication by [Deco et al. (2017)](https://doi.org/10.1016/j.neuroimage.2017.03.023).
-Any works using this data must cite that paper as well as [Clusella et. al (2022)](https://doi.org/10.1101/2022.12.02.518809).
+Any works using this data must cite that paper as well as [Clusella et. al (2023)](https://doi.org/10.1371/journal.pcbi.1010781).
 
 
 
